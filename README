@@ -1,0 +1,13 @@
+a simple alarm written in HTML and JS.
+
+* Using audio and video in Firefox
+https://developer.mozilla.org/En/Using_audio_and_video_in_Firefox
+Currently, Gecko supports only Vorbis, in Ogg containers, as well as WAV
+format.
+
+* from XHTML to HTML5
+And All That HTML5 Malarkey
+http://www.elementary-group-standards.com/html/and-all-that-html5-malarkey
+
+* HTML5
+http://www.w3.org/TR/html5/semantics.html

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Alarm</title>
+
+    <link type="text/css" rel="stylesheet" href="default.css" />
+    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="utils.js"></script>
+    <script type="text/javascript" src="alarm.js"></script>
+  </head>
+
+  <body>
+    <h1>simple alarm</h1>
+    <form method="post" id="alarm" action="#">
+      <h2>select time</h2>
+      <input type="radio" name="alarm_type" value="after" checked="checked" />alarm after
+      <input type="text" name="hours" id="hours" value="0" size="2" /> hours,
+      <input type="text" name="minutes" id="minutes" value="30" size="2" /> minutes<br />
+      <input type="radio" name="alarm_type" value="at" checked="checked" />alarm at
+      <input type="text" name="hour" id="hour" value="" size="2" />:<input type="text" name="minute" id="minute" value="" size="2" />
+      <h2>select action</h2>
+      <div class="hidden">
+	<!-- pop-up a browser window is no good. I prefer sound. -->
+	<input type="checkbox" name="show_message" id="show_message" />show pop-up message<br />
+      </div>
+      <input type="checkbox" name="play_sound" id="play_sound" checked="checked" />play sound <input type="button" name="play" id="play" value="test" /><input type="button" name="stop" id="stop" value="stop" />
+      <p>
+	current state:<br />
+	<span id="state">no alarm active.</span>
+	<input type="button" name="remove_alarm" id="remove_alarm" value="remove" class="hidden" />
+      </p>
+      <p>
+	<input type="submit" name="set_alarm" id="set_alarm" value="set alarm" />
+      </p>
+    </form>
+
+    <div class="hidden">
+      <!-- loop attrib is not implemented yet. -->
+      <audio id="audio" src="music/alarm.wav"></audio>
+    </div>
+
+    <div id="log"></div>
+    <p>changelog</p>
+    <ul>
+      <li>2010-10-10 v0.1.0 initial release</li>
+    </ul>
+    <p>Copyright (R) 2010, Yuanle Song (sylecn_AT_gmail_DOT_com)</p>
+  </body>
+
+</html>

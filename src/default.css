@@ -1,0 +1,54 @@
+body {
+    font-family: Verdana, "Bitstream Vera Sans", Helvetica, Arial, sans-serif;
+    font-size: small;
+    margin-left:auto;
+    margin-right:auto;
+    width: 800px;
+}
+
+input {
+    margin: 2px;
+    margin-bottom: 10px;
+}
+input[type=radio], input[type=checkbox], #state {
+    margin-right: 5px;
+    margin-left: 25px;
+}
+
+h1 {
+    font-size: 1.5em;
+    border-bottom: 3px solid #E2E1DE;
+}
+
+h2 {
+    font-size: 1em;
+    border-bottom: 1px solid #E2E1DE;
+}
+
+h1, h2 {
+    padding-bottom: 0.5em;
+}
+
+a {
+}
+
+a:link {
+}
+
+a:visited {
+}
+
+a:hover {
+}
+
+.right {
+    text-align: right;
+}
+
+.center {
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
