@@ -64,3 +64,12 @@ utils.assertDefined = function (symbol, msg) {
     }
 };
 
+/**
+ * return true if given string is a positive integer
+ */
+utils.isPositiveInteger = function (str) {
+    if (str.trim().match(/^\d+$/)) {
+	return true;
+    }
+    return false;
+};

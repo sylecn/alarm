@@ -22,14 +22,65 @@ alarm.formatTime = function (date) {
  */
 alarm.getValues = function () {
     alarm.alarmType = $('input[name=alarm_type]:checked').val();
-    alarm.hours = +$('#hours').val();
-    alarm.minutes = +$('#minutes').val();
-    // TODO check hours and minutes, they should be a number
-    alarm.hour = +$('#hour').val();
-    alarm.minute = +$('#minute').val();
-    // TODO check hour and minute, they should be 0-23 and 0-59
+    alarm.hours = $('#hours').val();
+    alarm.minutes = $('#minutes').val();
+    alarm.hour = $('#hour').val();
+    alarm.minute = $('#minute').val();
     alarm.showMessage = $('#show_message').attr('checked');
     alarm.playSound = $('#play_sound').attr('checked');
+};
+
+alarm.alarmAfterDataIsValid = function () {
+    // hours and minutes should be a number
+    if (utils.isPositiveInteger(alarm.hours)) {
+	alarm.hours = +alarm.hours;
+    } else {
+	alert('hours should be a number.');
+	return false;
+    }
+    if (utils.isPositiveInteger(alarm.minutes)) {
+	alarm.minutes = +alarm.minutes;
+    } else {
+	alert('minutes should be a number.');
+	return false;
+    }
+    return true;
+};
+
+alarm.alarmAtDataIsValid = function () {
+    // check hour and minute, they should be 0-23 and 0-59
+    var pattern = {
+	hour: /^([01]?[0-9]|2[0-3])$/,
+	minute: /^[0-5]?[0-9]$/
+    };
+    if (alarm.debuging) {
+	utils.assert(pattern.hour.exec('00') !== null);
+	utils.assert(pattern.hour.exec('03') !== null);
+	utils.assert(pattern.hour.exec('13') !== null);
+	utils.assert(pattern.hour.exec('20') !== null);
+	utils.assert(pattern.hour.exec('23') !== null);
+	utils.assert(pattern.hour.exec('24') === null);
+	utils.assert(pattern.hour.exec('-1') === null);
+	utils.assert(pattern.hour.exec('a2') === null);
+	utils.assert(pattern.minute.exec('00') !== null);
+	utils.assert(pattern.minute.exec('03') !== null);
+	utils.assert(pattern.minute.exec('59') !== null);
+	utils.assert(pattern.minute.exec('60') === null);
+	utils.assert(pattern.minute.exec('abc') === null);
+    }
+    if (alarm.hour.trim().match(pattern.hour)) {
+	alarm.hour = +alarm.hour;
+    } else {
+	alert('hours should be 00-23.');
+	return false;
+    }
+    if (alarm.minute.trim().match(pattern.minute)) {
+	alarm.minute = +alarm.minute;
+    } else {
+	alert('minutes should be 00-59.');
+	return false;
+    }
+    return true;
 };
 
 /**
@@ -106,13 +157,19 @@ $('document').ready(function () {
 
 	if (alarm.alarmType === 'after') {
 	    // alarm after
-	    alarm.log('alarm after ' + alarm.hours + ' hours, '
-		      + alarm.minutes + ' minutes.');
-	    ms = alarm.minutesToMS(alarm.hours * 60 + alarm.minutes);
-	    alarm.log('that\'s ' + ms + ' milliseconds.');
-	    alarmDate = new Date();
-	    alarmDate.setTime(alarmDate.getTime() + ms);
-	    alarm.log('at ' + alarmDate.toLocaleString());
+
+	    // check form input is valid
+	    if (alarm.alarmAfterDataIsValid()) {
+		alarm.log('alarm after ' + alarm.hours + ' hours, '
+			  + alarm.minutes + ' minutes.');
+		ms = alarm.minutesToMS(alarm.hours * 60 + alarm.minutes);
+		alarm.log('that\'s ' + ms + ' milliseconds.');
+		alarmDate = new Date();
+		alarmDate.setTime(alarmDate.getTime() + ms);
+		alarm.log('at ' + alarmDate.toLocaleString());
+	    } else {
+		return false;
+	    }
 	} else {
 	    utils.assertEqual('at', alarm.alarmType, 'unknown alarmType');
 	    // alarm at
@@ -126,18 +183,22 @@ $('document').ready(function () {
 	    //         145
 	    //         140
 	    //         20
-	    alarm.log('alarm at '
-		      + alarm.pad(alarm.hour) + ':' + alarm.pad(alarm.minute));
-	    alarmDate = new Date();
-	    m1 = alarmDate.getHours() * 60 + alarmDate.getMinutes();
-	    m2 = alarm.hour * 60 + alarm.minute;
-	    if (m2 < m1) {
-		m2 += 24 * 60;
+	    if (alarm.alarmAtDataIsValid()) {
+		alarm.log('alarm at ' + alarm.pad(alarm.hour) + ':'
+			  + alarm.pad(alarm.minute));
+		alarmDate = new Date();
+		m1 = alarmDate.getHours() * 60 + alarmDate.getMinutes();
+		m2 = alarm.hour * 60 + alarm.minute;
+		if (m2 < m1) {
+		    m2 += 24 * 60;
+		}
+		ms = alarm.minutesToMS(m2 - m1);
+		alarm.log('that\'s ' + ms + ' milliseconds.');
+		alarmDate.setTime(alarmDate.getTime() + ms);
+		alarm.log('at ' + alarmDate.toLocaleString());
+	    } else {
+		return false;
 	    }
-	    ms = alarm.minutesToMS(m2 - m1);
-	    alarm.log('that\'s ' + ms + ' milliseconds.');
-	    alarmDate.setTime(alarmDate.getTime() + ms);
-	    alarm.log('at ' + alarmDate.toLocaleString());
 	}
 
 	// now ms has the milliseconds for setTimeout
