@@ -94,13 +94,12 @@ alarm.minutesToMS = function (minutes) {
  * run the alarm.
  */
 alarm.runAlarm = function () {
-    alarm.alarmId = null;
+    alarm.alarmRemoved();
 
     var now = new Date();
     var msg = 'alarm triggered at ' + alarm.formatTime(now) + '.';
     alarm.log(msg);
     $('#state').text(msg);
-    $('#remove_alarm').hide();
 
     if (alarm.showMessage) {
 	// ignored.
@@ -129,7 +128,9 @@ $('document').ready(function () {
     $('#remove_alarm').click(function () {
 	utils.assertTrue(alarm.alarmId !== null);
 	window.clearTimeout(alarm.alarmId);
-	$('#remove_alarm').hide();
+
+	alarm.alarmRemoved();
+
 	$('#state').text('alarm removed.');
     });
     $('#play').click(function () {
@@ -203,17 +204,27 @@ $('document').ready(function () {
 
 	// now ms has the milliseconds for setTimeout
 	// alarmDate is a Date object representing when the alarm will run.
-
-	if (alarm.alarmId !== null) {
-	    // remove old alarm
-	    window.clearTimeout(alarm.alarmId);
-	    alarm.log('old alarm removed.');
-	}
-	alarm.alarmId = window.setTimeout(alarm.runAlarm, ms);
-
-	$('#state').text('alarm at ' + alarm.formatTime(alarmDate) + '.');
-	$('#remove_alarm').show();
+	alarm.setAlarm(ms, alarmDate);
 
 	return false;
     });
 });
+
+alarm.setAlarm = function (ms, alarmDate) {
+    if (alarm.alarmId !== null) {
+	// remove old alarm
+	window.clearTimeout(alarm.alarmId);
+	alarm.log('old alarm removed.');
+    }
+    alarm.alarmId = window.setTimeout(alarm.runAlarm, ms);
+
+    $('#state').text('alarm at ' + alarm.formatTime(alarmDate) + '.');
+    $('#remove_alarm').show();
+    utils.setCloseConfirm('alarm is set on this page');
+};
+
+alarm.alarmRemoved = function () {
+    alarm.alarmId = null;
+    $('#remove_alarm').hide();
+    utils.removeCloseConfirm();
+};

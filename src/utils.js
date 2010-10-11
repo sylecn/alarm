@@ -1,24 +1,14 @@
 var utils = {};
 
+// ======================
+//  Debuging and Testing
+// ======================
+
 // when release an app, copy this file and set debuging to false.
-utils.debuging = false;
+utils.debuging = true;
 
 utils.isDefined = function (symbol) {
     return (typeof symbol !== 'undefined');
-};
-
-utils.inList = function (e, list) {
-    var l = list.length;
-    for (var i = 0; i < l; ++i) {
-	if (e === list[i]) {
-	    return true;
-	}
-    }
-    return false;
-};
-
-utils.isArray = function (o) {
-    return Object.prototype.toString.call(o) === '[object Array]';
 };
 
 utils.assertTrue = function (value, msg) {
@@ -64,6 +54,10 @@ utils.assertDefined = function (symbol, msg) {
     }
 };
 
+// =======================
+//  String/Regexp helpers
+// =======================
+
 /**
  * return true if given string is a positive integer
  */
@@ -72,4 +66,54 @@ utils.isPositiveInteger = function (str) {
 	return true;
     }
     return false;
+}
+
+// ==============
+//  Array Helper
+// ==============
+
+utils.inList = function (e, list) {
+    var l = list.length;
+    for (var i = 0; i < l; ++i) {
+	if (e === list[i]) {
+	    return true;
+	}
+    }
+    return false;
+};
+
+utils.isArray = function (o) {
+    return Object.prototype.toString.call(o) === '[object Array]';
+};
+
+// ============
+//  DOM Events
+// ============
+
+/**
+ * ask for confirmation when user try to close window. given message will
+ * shown to the user by browser.
+ *
+ * this function add a handler to window.onbeforeunload event.
+ */
+utils.setCloseConfirm = function (msg) {
+    utils.assert(typeof msg === 'string', 'confirm message should be string.');
+    window.onbeforeunload =  function (e) {
+	var e = e || window.event;
+
+	// For IE and Firefox
+	if (e) {
+	    e.returnValue = msg;
+	}
+
+	// For Safari
+	return msg;
+    };
+};
+
+/**
+ * don't show confirmation window when user close window.
+ */
+utils.removeCloseConfirm = function () {
+    window.onbeforeunload = undefined;
 };

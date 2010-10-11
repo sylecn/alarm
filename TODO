@@ -1,2 +1,19 @@
+#+STARTUP: fold
 * 
+* DONE ask for confirmation if there is active alarm and user want to close
+  browser window. prevent accident close.
+
+  how to do this in JS?
+
+  I know dropbox will show a message if uploading is not finished and you try
+  to close the window. how they do it?
+
+  ref: http://www.openjs.com/scripts/events/exit_confirmation.php
+
+  in beforeunload event handler, if you set event.returnValue to a string,
+  firefox will display a confirm window showing that message.
+
+  https://developer.mozilla.org/en/DOM/window.onbeforeunload
+  this page does say what to do, but it doesn't say setting that value will
+  display a dialog and prevent window from closing.
 * DONE translate to HTML5
